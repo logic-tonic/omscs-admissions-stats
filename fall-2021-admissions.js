@@ -8,7 +8,7 @@ function fetchComments(url) {
     })
 }
 
-function plotDaysOfWeek(dates) {
+function plotDaysOfWeek(dates, year) {
     const formattedDates = dates.map(date => date.format('dddd'))
     const counts = {};
     formattedDates.forEach(function (x) { counts[x] = (counts[x] || 0) + 1; });
@@ -27,13 +27,13 @@ function plotDaysOfWeek(dates) {
     var layout = {
         height: 400,
         width: 500,
-        title: 'Fall 2021 Decision Days of Week',
+        title: `Fall ${year} Decision Days of Week`,
 
     };
-    Plotly.newPlot('2021FallDaysOfWeek', data, layout);
+    Plotly.newPlot(`${year}FallDaysOfWeek`, data, layout);
 }
 
-function plotDates(dates) {
+function plotDates(dates, year) {
     const formattedDates = dates.map(date => date.format("YYYY-MM-DD"))
     const counts = {};
     formattedDates.forEach(function (x) { counts[x] = (counts[x] || 0) + 1; });
@@ -55,7 +55,7 @@ function plotDates(dates) {
     ];
 
     var layout = {
-        title: 'Fall 2021 Decision Dates',
+        title: `Fall ${year} Decision Dates`,
         font:{
           family: 'Raleway, sans-serif'
         },
@@ -70,26 +70,28 @@ function plotDates(dates) {
         bargap :0.05
       };
       
-    Plotly.newPlot('2021FallDates', data, layout);
+    Plotly.newPlot(`${year}FallDates`, data, layout);
 }
 
-function cleanDates(data) {
+function cleanDates(data, year) {
     const dataAsDates = data.map(post => {
-        const decisionDateArray = post.split('\n').find(line => line.includes('Decision')).split(' ')
-        const decisionDateString = decisionDateArray.slice(2, decisionDateArray.length).join('')
+        const decisionDateArray = post.split('\n').find(line => line.includes('Decision'))?.split(' ')
+        const decisionDateString = decisionDateArray?.slice(2, decisionDateArray.length)?.join('')
         return moment(decisionDateString)
     })
-    return dataAsDates.filter(date => date.isValid() && date.year() == '2021')
+    return dataAsDates.filter(date => date.isValid() && date.year() == year)
 }
 
-async function getDecisionDates(url) {
+async function getDecisionDates(url, year) {
     const data = await fetchComments(url);
-    const formattedData = cleanDates(data)
-    plotDates(formattedData)
-    plotDaysOfWeek(formattedData)
+    const formattedData = cleanDates(data, year)
+    plotDates(formattedData, year)
+    plotDaysOfWeek(formattedData, year)
 }
 
-getDecisionDates('https://www.reddit.com/r/OMSCS/comments/lqv04x/fall_2021_admissions_thread.json')
+getDecisionDates('https://www.reddit.com/r/OMSCS/comments/lqv04x/fall_2021_admissions_thread.json', 2021)
+
+getDecisionDates('https://www.reddit.com/r/OMSCS/comments/spbavt/fall_2022_admissions_thread.json', 2022)
 
 // when do people get accepted?
 // does their accept/reject status have anything to do with it?
