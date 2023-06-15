@@ -25,10 +25,11 @@ function plotDaysOfWeek(dates, year) {
     }];
     
     var layout = {
-        height: 400,
-        width: 500,
+        width: window.screen.width,
         title: `Fall ${year} Decision Days of Week`,
-
+        font:{
+            family: 'Courier New, monospace'
+        },
     };
     Plotly.newPlot(`${year}FallDaysOfWeek`, data, layout);
 }
@@ -56,8 +57,9 @@ function plotDates(dates, year) {
 
     var layout = {
         title: `Fall ${year} Decision Dates`,
+        width: window.screen.width,
         font:{
-          family: 'Raleway, sans-serif'
+          family: 'Courier New, monospace'
         },
         showlegend: false,
         xaxis: {
@@ -92,8 +94,3 @@ async function getDecisionDates(url, year) {
 getDecisionDates('https://www.reddit.com/r/OMSCS/comments/lqv04x/fall_2021_admissions_thread.json', 2021)
 
 getDecisionDates('https://www.reddit.com/r/OMSCS/comments/spbavt/fall_2022_admissions_thread.json', 2022)
-
-// when do people get accepted?
-// does their accept/reject status have anything to do with it?
-// does their country have anything to do with it?
-// does their application date have anything to do with it?
