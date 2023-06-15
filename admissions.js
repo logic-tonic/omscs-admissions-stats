@@ -84,11 +84,36 @@ function cleanDates(data, year) {
     return dataAsDates.filter(date => date.isValid() && date.year() == year)
 }
 
+function plotQuartiles(dates, year) {
+    const formattedDates = dates.map(date => date.format("YYYY-MM-DD"))
+    const sortedDates = dates.sort((a, b) => a - b);
+    const mid = Math.floor(sortedDates.length / 2)
+    const median = sortedDates.length % 2 !== 0 ? sortedDates[mid] : (sortedDates[mid - 1] + sortedDates[mid]) / 2
+    console.log(`median acceptance date for ${year}`, median)
+
+    var data = [{
+        x: formattedDates,
+        type: 'box',
+        name: year,
+    }];
+
+    var layout = {
+        title: `Fall ${year} Decision Dates Boxplot`,
+        width: window.screen.width,
+        font:{
+            family: 'Courier New, monospace'
+        },
+    };
+
+    Plotly.newPlot(`${year}FallQuartiles`, data, layout);
+}
+
 async function getDecisionDates(url, year) {
     const data = await fetchComments(url);
     const formattedData = cleanDates(data, year)
     plotDates(formattedData, year)
     plotDaysOfWeek(formattedData, year)
+    if (year != 2023) { plotQuartiles(formattedData, year) }
 }
 
 getDecisionDates('https://www.reddit.com/r/OMSCS/comments/lqv04x/fall_2021_admissions_thread.json', 2021)
