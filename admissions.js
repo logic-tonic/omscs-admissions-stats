@@ -79,7 +79,7 @@ function cleanDates(data, year) {
     const dataAsDates = data.map(post => {
         const decisionDateArray = post.split('\n').find(line => line.includes('Decision'))?.split(' ')
         const decisionDateString = decisionDateArray?.slice(2, decisionDateArray.length)?.join('')
-        return moment(decisionDateString)
+        return moment(decisionDateString || "invalid")
     })
     return dataAsDates.filter(date => date.isValid() && date.year() == year)
 }
@@ -92,5 +92,5 @@ async function getDecisionDates(url, year) {
 }
 
 getDecisionDates('https://www.reddit.com/r/OMSCS/comments/lqv04x/fall_2021_admissions_thread.json', 2021)
-
 getDecisionDates('https://www.reddit.com/r/OMSCS/comments/spbavt/fall_2022_admissions_thread.json', 2022)
+getDecisionDates('https://www.reddit.com/r/OMSCS/comments/11i163s/fall_2023_admissions_thread.json', 2023)
